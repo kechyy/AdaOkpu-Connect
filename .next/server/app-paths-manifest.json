@@ -1,8 +1,7 @@
 {
-  "/api/ledger/route": "app/api/ledger/route.js",
   "/decisions/new/page": "app/decisions/new/page.js",
-  "/members/page": "app/members/page.js",
-  "/page": "app/page.js",
   "/support/page": "app/support/page.js",
-  "/decisions/[id]/edit/page": "app/decisions/[id]/edit/page.js"
+  "/members/page": "app/members/page.js",
+  "/decisions/[id]/edit/page": "app/decisions/[id]/edit/page.js",
+  "/page": "app/page.js"
 }

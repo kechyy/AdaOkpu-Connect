@@ -8,31 +8,41 @@ import EmptyState from "@/components/ui/EmptyState";
 
 type Entry = { id: string; date: string; contributor: string; description: string; amount: number };
 
-async function fetchList(): Promise<Entry[]> {
-  const r = await fetch("/api/ledger", { cache: "no-store" });
+async function fetchList(): Promise<Decision[]> {
+  const r = await fetch("/api/decisions", { cache: "no-store" });
   if (!r.ok) throw new Error("Failed to fetch");
   return r.json();
 }
 async function apiDelete(id: string) {
-  const r = await fetch(`/api/ledger/${id}`, { method: "DELETE" });
+  const r = await fetch(`/api/decisions/${id}`, { method: "DELETE" });
   if (!r.ok) throw new Error("Failed to delete");
 }
-
 export default function LedgerTable() {
   const qc = useQueryClient();
-  const { data: rows = [], isLoading } = useQuery({ queryKey: ["ledger"], queryFn: fetchList });
+  const router = useRouter();
+  const { data: rows = [], isLoading } = useQuery({ queryKey: ["decisions"], queryFn: fetchList });
 
   const del = useMutation({
     mutationFn: apiDelete,
     onMutate: async (id: string) => {
-      await qc.cancelQueries({ queryKey: ["ledger"] });
-      const prev = qc.getQueryData<Entry[]>(["ledger"]) || [];
-      qc.setQueryData<Entry[]>(["ledger"], prev.filter(x => x.id !== id));
+      await qc.cancelQueries({ queryKey: ["decisions"] });
+      const prev = qc.getQueryData<Decision[]>(["decisions"]) || [];
+      qc.setQueryData<Decision[]>(["decisions"], prev.filter(x => x.id !== id));
       return { prev };
     },
-    onError: (_e,_v,ctx)=>{ if(ctx?.prev) qc.setQueryData(["ledger"], ctx.prev); },
-    onSettled: ()=>qc.invalidateQueries({ queryKey: ["ledger"] })
+    onError: (_e, _v, ctx) => { if (ctx?.prev) qc.setQueryData(["decisions"], ctx.prev); },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["decisions"] }),
   });
+
+  const onEdit = (d: Decision) => {
+    router.push(`/decisions/${d.id}/edit`);
+  };
+
+  const confirmDelete = (id: string) => {
+    console.log('idddd', id)
+    if (confirm("Delete this member?")) del.mutate(id);
+  }
+
 
   return (
     <Section title="Support Ledger" actions={<Link href="/support/new" className="btn">Add Entry</Link>}>

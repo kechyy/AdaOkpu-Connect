@@ -2,13 +2,12 @@
 # --- OS / Editors ---
 .DS_Store
 Thumbs.db
-*.swp
 .idea/
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 
-# --- Node / Tooling ---
+# Node / tooling
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -16,7 +15,7 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# --- Next.js / Build Artifacts ---
+# Next.js / builds
 .next/
 out/
 dist/
@@ -28,11 +27,11 @@ coverage/
 .cache/
 tmp/
 
-# --- Env & local data ---
+# Env & local data
 .env*
-!.env.example
 .env_local
+!.env.example
 .data/
 
-# --- Misc caches ---
+# Lint cache
 .eslintcache

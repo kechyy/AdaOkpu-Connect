@@ -1,21 +1,38 @@
 import { NextResponse } from "next/server";
-import { readDB, writeDB, uid, LedgerSchema } from "@/lib/db";
+import { getDb } from "@/lib/mongo";
+import { DecisionCreateSchema, DecisionDoc, toDecisionAPI } from "@/lib/schemas";
 
-const CreateSchema = LedgerSchema.omit({ id: true });
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
+// GET /api/members
 export async function GET() {
-  const db = await readDB();
-  return NextResponse.json(db.ledger);
+  const db = await getDb();
+  const col = db.collection<DecisionDoc>("decisions");     // 👈 typed
+  const docs = await col.find({}).sort({ createdAt: -1 }).toArray();
+  return NextResponse.json(docs.map(toDecisionAPI));     // ✅ ok now
 }
 
+// POST /api/members
 export async function POST(req: Request) {
   const payload = await req.json();
-  if (typeof payload.amount === "string") payload.amount = parseFloat(payload.amount);
-  const parsed = CreateSchema.safeParse(payload);
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const rec = { id: uid(), ...parsed.data };
-  const db = await readDB();
-  db.ledger.unshift(rec);
-  await writeDB(db);
-  return NextResponse.json(rec, { status: 201 });
+  const parsed = DecisionCreateSchema.safeParse(payload);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+  const db = await getDb();
+  const col = db.collection<DecisionDoc>("decisions");
+
+  const now = new Date();
+  const doc = {
+    date: parsed.data.date,
+    decidedBy: parsed.data.decidedBy,
+    decision: parsed.data.decision,
+    notes: parsed.data.notes,
+    createdAt: now
+  } satisfies Omit<DecisionDoc, "_id">;
+
+  const { insertedId } = await col.insertOne(doc as any);
+  const saved = await col.findOne({ _id: insertedId });
+  return NextResponse.json(toDecisionAPI(saved as any), { status: 201 });
 }

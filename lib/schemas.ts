@@ -52,7 +52,7 @@ export function toMemberAPI(d: WithId<MemberDoc>): MemberAPI {
 
 
 
-
+// Decision model
 
 export const DecisionCreateSchema = z.object({
   date: z.union([z.string(), z.coerce.date()]).transform((v) => new Date(v)),
@@ -99,7 +99,7 @@ export function toDecisionAPI(d: WithId<DecisionDoc>): DecisionAPI {
 
 
 
-
+// Ledger Model
 export const LedgerCreateSchema = z.object({
   date: z.union([z.string(), z.coerce.date()]).transform((v) => new Date(v)),
   type: z.enum(["in", "out"]),
@@ -108,6 +108,41 @@ export const LedgerCreateSchema = z.object({
   amount: z.coerce.number(),
   currency: z.string().default("NGN"),
 });
+
+export type LedgerCreate = z.infer<typeof LedgerCreateSchema>;
+
+// your MemberDoc type:
+export type LedgerDoc = {
+  _id: ObjectId;          // keep _id here if you wish
+  date: Date;
+  contributor: string;
+  description: string;
+  amount: number;
+  currency: string
+  createdAt: Date
+};
+
+export type LedgerAPI = {
+  id: string;
+  date: string;
+  contributor: string;
+  description: string;
+  amount: number; 
+  currency: string;
+  createdAt: string;
+};
+
+export function toLedgerAPI(l: WithId<LedgerDoc>): LedgerAPI {
+  return {
+    id: l._id.toString(),
+    date: l.date.toISOString().slice(0, 10),
+    contributor: l.contributor,
+    description: l.description,
+    amount: l.amount,
+    currency: l.currency,
+    createdAt: l.createdAt.toISOString(),
+  };
+}
 
 export const SessionCreateSchema = z.object({
   date: z.union([z.string(), z.coerce.date()]).transform((v) => new Date(v)),
