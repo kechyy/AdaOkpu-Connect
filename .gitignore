@@ -1,4 +1,5 @@
-
+# Edit your .gitignore to have a clearer structure
+cat > .gitignore << 'EOF'
 # --- OS / Editors ---
 .DS_Store
 Thumbs.db
@@ -28,12 +29,18 @@ coverage/
 .cache/
 tmp/
 
-# Env & local data
-.env*
+# Environment files (ignore all .env files except .env.example)
+.env
 .env.local
+.env.development
+.env.production
+.env.test
+.env*.local
 !.env.example
-.data/
 
+# Data
+.data/
 
 # Lint cache
 .eslintcache
+EOF
