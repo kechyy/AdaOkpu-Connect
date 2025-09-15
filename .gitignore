@@ -1,0 +1,38 @@
+
+# --- OS / Editors ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# --- Node / Tooling ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# --- Next.js / Build Artifacts ---
+.next/
+out/
+dist/
+.turbo/
+turbo/
+.vercel/
+.netlify/
+coverage/
+.cache/
+tmp/
+
+# --- Env & local data ---
+.env*
+!.env.example
+.env_local
+.data/
+
+# --- Misc caches ---
+.eslintcache

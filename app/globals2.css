@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input {@apply w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-900/20;}
+.btn {@apply inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50;}
+.card {@apply rounded-2xl bg-white shadow-sm ring-1 ring-gray-200 p-4;}
+.table { @apply w-full text-sm; }
+.th { @apply text-left text-gray-500 py-2; }
+.td { @apply py-2; }
+.h1 { @apply text-2xl font-bold; }
+.h2 { @apply text-lg font-semibold; }
+.lead { @apply text-gray-600; }
+.note { @apply text-sm text-gray-500; }
+.size-4 { width: 1rem; height: 1rem; }
+.size-5 { width: 1.25rem; height: 1.25rem; }
