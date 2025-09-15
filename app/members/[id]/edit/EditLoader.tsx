@@ -1,4 +1,49 @@
+// React Query state cached approach
+// EditLoader (client)
 "use client";
+
+import MemberForm from "@/components/client/MemberForm";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+type Member = { id: string; name: string; location?: string; interests?: string; joined: string };
+
+async function fetchMemberById(id: string): Promise<Member> {
+  const r = await fetch(`/api/members/${id}`, { cache: "no-store" });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+export default function EditLoader({ id }: { id: string }) {
+  const qc = useQueryClient();
+
+  const { data: member, isLoading } = useQuery({
+    queryKey: ["member", id],
+    queryFn: () => fetchMemberById(id),
+    // 👇 seed this query from the list cache if available (no extra network)
+    initialData: () => {
+      const list = qc.getQueryData<Member[]>(["members"]);
+      return list?.find(m => m.id === id);
+    },
+  });
+
+  if (isLoading && !member) return <div>Loading…</div>;
+  if (!member) return <div className="text-red-600">Member not found.</div>;
+
+  // pass `member` to your form as initial values
+  // (you can still use Zustand to keep unsaved edits if you want)
+  return <MemberForm initial={member} mode="edit" /> ;
+}
+
+
+
+
+
+
+
+
+// Zustan state approach
+
+// "use client";
 
 // import { useEffect, useMemo, useState } from "react";
 // import MemberForm, { MemberFormValues } from "@/components/client/MemberForm";
@@ -51,39 +96,4 @@
 //   return <MemberForm initial={initial} mode="edit" />;
 // }
 
-
-// EditLoader (client)
-"use client";
-
-import MemberForm from "@/components/client/MemberForm";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-
-type Member = { id: string; name: string; location?: string; interests?: string; joined: string };
-
-async function fetchMemberById(id: string): Promise<Member> {
-  const r = await fetch(`/api/members/${id}`, { cache: "no-store" });
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
-}
-
-export default function EditLoader({ id }: { id: string }) {
-  const qc = useQueryClient();
-
-  const { data: member, isLoading } = useQuery({
-    queryKey: ["member", id],
-    queryFn: () => fetchMemberById(id),
-    // 👇 seed this query from the list cache if available (no extra network)
-    initialData: () => {
-      const list = qc.getQueryData<Member[]>(["members"]);
-      return list?.find(m => m.id === id);
-    },
-  });
-
-  if (isLoading && !member) return <div>Loading…</div>;
-  if (!member) return <div className="text-red-600">Member not found.</div>;
-
-  // pass `member` to your form as initial values
-  // (you can still use Zustand to keep unsaved edits if you want)
-  return <MemberForm initial={member} mode="edit" /> ;
-}
 
