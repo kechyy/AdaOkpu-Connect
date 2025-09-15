@@ -2,7 +2,7 @@ import MemberForm, { MemberFormValues } from "@/components/client/MemberForm";
 import Section from "@/components/ui/Section";
 import EditLoader from "./EditLoader";
 
-export default async function EditMemberPage({ params }: { params: { id: string } }) {
+export default async function EditMemberPage({ params }: { params: Promise<{ id: string }> }) {
   // Server shell; actual draft comes from client store (fast), with a client fallback fetcher.
   const { id } = await params; 
   return (

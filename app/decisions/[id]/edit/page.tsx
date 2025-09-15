@@ -2,7 +2,7 @@
 import DecisionEditLoader from "./DecisionEditLoader";
 import Section from "@/components/ui/Section";
 
-export default async function EditDecisionPage({ params }: { params: { id: string } }) {
+export default async function EditDecisionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params; 
 
   return (

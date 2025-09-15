@@ -2,7 +2,7 @@ import LedgerForm from "@/components/client/LedgerForm";
 import LedgerEditLoader from "./LedgerEditLoader";
 import Section from "@/components/ui/Section";
 
-export default async function EditLedgerEntryPage({ params }: { params: { id: string } }) {
+export default async function EditLedgerEntryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params; 
     return (
       <div className="space-y-6">
