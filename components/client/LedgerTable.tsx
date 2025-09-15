@@ -5,11 +5,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import Section from "@/components/ui/Section";
 import EmptyState from "@/components/ui/EmptyState";
+import { useRouter } from "next/navigation";
 
-type Entry = { id: string; date: string; contributor: string; description: string; amount: number };
+type Ledger = { id: string; date: string; contributor: string; description: string; amount: number };
 
-async function fetchList(): Promise<Decision[]> {
-  const r = await fetch("/api/decisions", { cache: "no-store" });
+async function fetchList(): Promise<Ledger[]> {
+  const r = await fetch("/api/ledger", { cache: "no-store" });
   if (!r.ok) throw new Error("Failed to fetch");
   return r.json();
 }
@@ -20,32 +21,32 @@ async function apiDelete(id: string) {
 export default function LedgerTable() {
   const qc = useQueryClient();
   const router = useRouter();
-  const { data: rows = [], isLoading } = useQuery({ queryKey: ["decisions"], queryFn: fetchList });
+
+  const { data: rows = [], isLoading } = useQuery({ queryKey: ["ledger"], queryFn: fetchList });
 
   const del = useMutation({
     mutationFn: apiDelete,
     onMutate: async (id: string) => {
-      await qc.cancelQueries({ queryKey: ["decisions"] });
-      const prev = qc.getQueryData<Decision[]>(["decisions"]) || [];
-      qc.setQueryData<Decision[]>(["decisions"], prev.filter(x => x.id !== id));
+      await qc.cancelQueries({ queryKey: ["ledger"] });
+      const prev = qc.getQueryData<Ledger[]>(["ledger"]) || [];
+      qc.setQueryData<Ledger[]>(["ledger"], prev.filter(x => x.id !== id));
       return { prev };
     },
-    onError: (_e, _v, ctx) => { if (ctx?.prev) qc.setQueryData(["decisions"], ctx.prev); },
-    onSettled: () => qc.invalidateQueries({ queryKey: ["decisions"] }),
+    onError: (_e, _v, ctx) => { if (ctx?.prev) qc.setQueryData(["ledger"], ctx.prev); },
+    onSettled: () => qc.invalidateQueries({ queryKey: ["ledger"] }),
   });
 
-  const onEdit = (d: Decision) => {
-    router.push(`/decisions/${d.id}/edit`);
+  const onEdit = (d: Ledger) => {
+    router.push(`/ledger/${d.id}/edit`);
   };
 
   const confirmDelete = (id: string) => {
-    console.log('idddd', id)
     if (confirm("Delete this member?")) del.mutate(id);
   }
 
 
   return (
-    <Section title="Support Ledger" actions={<Link href="/support/new" className="btn">Add Entry</Link>}>
+    <Section title="Support Ledger" actions={<Link href="/ledger/new" className="btn">Add Entry</Link>}>
       {isLoading ? <div className="p-4 text-sm text-gray-500">Loading…</div> : rows.length === 0 ? (
         <EmptyState>No entries yet.</EmptyState>
       ) : (
@@ -60,8 +61,12 @@ export default function LedgerTable() {
                 <td className="td">₦{e.amount.toLocaleString()}</td>
                 <td className="td">
                   <div className="flex justify-end gap-2">
-                    <Link href={`/support/${e.id}/edit`} className="p-2 rounded-lg hover:bg-gray-100" title="Edit"><Pencil2Icon className="size-4" /></Link>
-                    <button onClick={()=>del.mutate(e.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-600" title="Delete"><TrashIcon className="size-4" /></button>
+                    <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => onEdit(e)} title="Edit">
+                      <Pencil2Icon className="size-4" />
+                    </button>
+                    <button className="p-2 rounded-lg hover:bg-red-50 text-red-600 disabled:opacity-50" onClick={() => confirmDelete(e.id)} title="Delete">
+                      <TrashIcon className="size-4" />
+                    </button>
                   </div>
                 </td>
               </tr>

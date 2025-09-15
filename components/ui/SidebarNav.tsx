@@ -8,7 +8,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/members", label: "Member List" },
   { href: "/decisions", label: "Decisions Log" },
-  { href: "/support", label: "Support Ledger" },
+  { href: "/ledger", label: "Support Ledger" },
   { href: "/sessions", label: "Monthly Sessions" },
   { href: "/welcome", label: "Welcome Text" },
 ];

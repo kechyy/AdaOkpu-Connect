@@ -102,7 +102,7 @@ export function toDecisionAPI(d: WithId<DecisionDoc>): DecisionAPI {
 // Ledger Model
 export const LedgerCreateSchema = z.object({
   date: z.union([z.string(), z.coerce.date()]).transform((v) => new Date(v)),
-  type: z.enum(["in", "out"]),
+  // type: z.enum(["in", "out"]),
   contributor: z.string().min(1),
   description: z.string().min(1),
   amount: z.coerce.number(),

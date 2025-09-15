@@ -41,7 +41,6 @@ export default function DecisionsTable() {
   };
 
   const confirmDelete = (id: string) => {
-    console.log('idddd', id)
     if (confirm("Delete this member?")) del.mutate(id);
   }
 

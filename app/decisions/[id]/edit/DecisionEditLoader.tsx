@@ -28,7 +28,7 @@ export default function DecisionEditLoader({ id }: { id: string }) {
   });
 
   if (isLoading && !decision) return <div>Loading…</div>;
-  if (!decision) return <div className="text-red-600">Member not found.</div>;
+  if (!decision) return <div className="text-red-600">Decision not found.</div>;
 
   // pass `member` to your form as initial values
   // (you can still use Zustand to keep unsaved edits if you want)

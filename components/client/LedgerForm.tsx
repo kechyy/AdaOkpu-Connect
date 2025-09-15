@@ -5,21 +5,22 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export type EntryFormValues = { id: string; date: string; contributor: string; description: string; amount: number };
+export type LedgerFormValues = { id: string; date: string; contributor: string; currency: string; description: string; amount: number };
 
 
-async function apiCreateDecision(data: Omit<DecisionFormValues, "id">) {
-  const r = await fetch("/api/decisions", {
+async function apiCreateLedger(data: Omit<LedgerFormValues, "id">) {
+  const r = await fetch("/api/ledger", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+  console.log('rrrr', r)
   if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 
-async function apiUpdateMember(id: string, data: Partial<DecisionFormValues>) {
-  const r = await fetch(`/api/decisions/${id}`, {
+async function apiUpdateMember(id: string, data: Partial<LedgerFormValues>) {
+  const r = await fetch(`/api/ledger/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -32,34 +33,35 @@ export default function LedgerForm({
   initial,
   mode, // "create" | "edit"
 }: {
-  initial: DecisionFormValues;
+  initial: LedgerFormValues;
   mode: "create" | "edit";
 }) {
   const router = useRouter();
   const qc = useQueryClient();
-  const form = useForm<DecisionFormValues>({ defaultValues: initial });
+  const form = useForm<LedgerFormValues>({ defaultValues: initial });
 
   const createMut = useMutation({
-    mutationFn: (vals: Omit<DecisionFormValues, "id">) => apiCreateDecision(vals),
+    mutationFn: (vals: Omit<LedgerFormValues, "id">) => apiCreateLedger(vals),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["decisions"] });
-      router.push("/decisions");
+      qc.invalidateQueries({ queryKey: ["ledger"] });
+      router.push("/ledger");
     },
   });
 
   const updateMut = useMutation({
-    mutationFn: (vals: DecisionFormValues) => apiUpdateMember(vals.id!, vals),
+    mutationFn: (vals: LedgerFormValues) => apiUpdateMember(vals.id!, vals),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["decisions"] });
-      router.push("/decisions");
+      qc.invalidateQueries({ queryKey: ["ledger"] });
+      router.push("/ledger");
     },
   });
 
-  const onSubmit = (vals: DecisionFormValues) => {
+  const onSubmit = (vals: LedgerFormValues) => {
     if (mode === "create") {
       const { id, ...rest } = vals;
       createMut.mutate(rest);
     } else {
+      console.log('valls', mode)
       updateMut.mutate(vals);
     }
   };
