@@ -30,7 +30,7 @@ tmp/
 
 # Env & local data
 .env*
-.env_local
+.env.local
 !.env.example
 .data/
 
