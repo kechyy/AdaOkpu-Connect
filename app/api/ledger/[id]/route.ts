@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongo";
-import { LedgerCreateSchema, toLedgerAPI, toMemberAPI } from "@/lib/schemas";
+import { LedgerCreateSchema, toLedgerAPI } from "@/lib/schemas";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
