@@ -52,7 +52,14 @@ export default function SessionsTable() {
         <EmptyState>No sessions yet.</EmptyState>
       ) : (
         <table className="table">
-          <thead><tr><th className="th">Date</th><th className="th">Topic</th><th className="th">Speaker</th><th className="th text-right w-28">Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th className="th">Date</th>
+              <th className="th">Topic</th>
+              <th className="th">Speaker</th>
+              <th className="th text-right w-28">Actions</th>
+            </tr>
+          </thead>
           <tbody>
             {sessions.map(s => (
               <tr key={s.id} className="border-t">
