@@ -55,7 +55,7 @@ export default function MemberTable() {
   };
 
   return (
-    <Section title="Current Members" actions={<Link href="/members/new" className="btn">Add New Member</Link>}>
+    <Section title="Current Members" actions={<Link href="/members/new" className="btn">Add Member</Link>}>
       {isLoading ? (
         <div className="p-4 text-sm text-gray-500">Loading…</div>
       ) : members.length === 0 ? (
