@@ -51,11 +51,19 @@ export default function LedgerTable() {
         <EmptyState>No entries yet.</EmptyState>
       ) : (
         <table className="table">
-          <thead><tr><th className="th">Date</th><th className="th">Contributor</th><th className="th">Description</th><th className="th">Amount</th><th className="th text-right w-28">Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th className="th hidden md:table-cell">Date</th>
+              <th className="th">Name</th>
+              <th className="th">Desc</th>
+              <th className="th">Amt</th>
+              <th className="th text-right w-28">Actions</th>
+            </tr>
+          </thead>
           <tbody>
             {rows.map(e => (
               <tr key={e.id} className="border-t">
-                <td className="td text-sm">{e.date}</td>
+                <td className="td text-sm hidden md:table-cell">{e.date}</td>
                 <td className="td text-sm">{e.contributor}</td>
                 <td className="td text-sm">{e.description}</td>
                 <td className="td text-sm">₦{e.amount.toLocaleString()}</td>

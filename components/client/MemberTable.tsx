@@ -56,18 +56,17 @@ export default function MemberTable() {
 
   return (
     <Section title="Current Members" actions={<Link href="/members/new" className="btn">Add Member</Link>}>
-      {isLoading ? (
-        <div className="p-4 text-sm text-gray-500">Loading…</div>
-      ) : members.length === 0 ? (
-        <EmptyState>No members found. Add the first one!</EmptyState>
+      {isLoading ? <div className="p-4 text-sm text-gray-500">Loading…</div> : members.length === 0 ? (
+        <EmptyState>No member yet.</EmptyState>
       ) : (
-        <table className="table">
+        <div className="w-full max-w-full overflow-x-auto overscroll-x-contain">
+            <table className="table">
           <thead>
             <tr>
               <th className="th">Name</th>
               <th className="th">Location</th>
-              <th className="th">Interest Areas</th>
-              <th className="th">Intro Date</th>
+              <th className="th hidden md:table-cell">Interest</th>
+              <th className="th">Date</th>
               <th className="th text-right w-28">Actions</th>
             </tr>
           </thead>
@@ -76,7 +75,7 @@ export default function MemberTable() {
               <tr key={m.id} className="border-t">
                 <td className="td text-sm">{m.name}</td>
                 <td className="td text-sm">{m.location}</td>
-                <td className="td text-sm">{m.interests}</td>
+                <td className="td text-sm hidden md:table-cell">{m.interests}</td>
                 <td className="td text-sm">{m.joined}</td>
                 <td className="td text-sm">
                   <div className="flex justify-end gap-2">
@@ -92,7 +91,10 @@ export default function MemberTable() {
             ))}
           </tbody>
         </table>
+        </div>
       )}
     </Section>
   );
 }
+
+
