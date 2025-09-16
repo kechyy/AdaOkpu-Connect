@@ -74,11 +74,11 @@ export default function MemberTable() {
           <tbody>
             {members.map(m => (
               <tr key={m.id} className="border-t">
-                <td className="td">{m.name}</td>
-                <td className="td">{m.location}</td>
-                <td className="td">{m.interests}</td>
-                <td className="td">{m.joined}</td>
-                <td className="td">
+                <td className="td text-sm">{m.name}</td>
+                <td className="td text-sm">{m.location}</td>
+                <td className="td text-sm">{m.interests}</td>
+                <td className="td text-sm">{m.joined}</td>
+                <td className="td text-sm">
                   <div className="flex justify-end gap-2">
                     <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => onEdit(m)} title="Edit">
                       <Pencil2Icon className="size-4" />

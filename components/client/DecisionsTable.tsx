@@ -54,10 +54,10 @@ export default function DecisionsTable() {
           <tbody>
             {rows.map(d => (
               <tr key={d.id} className="border-t">
-                <td className="td">{d.date}</td>
-                <td className="td">{d.decision}</td>
-                <td className="td">{d.decidedBy}</td>
-                <td className="td">
+                <td className="td text-sm">{d.date}</td>
+                <td className="td text-sm">{d.decision}</td>
+                <td className="td text-sm">{d.decidedBy}</td>
+                <td className="td text-sm">
                   <div className="flex justify-end gap-2">
                     <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => onEdit(d)} title="Edit">
                       <Pencil2Icon className="size-4" />

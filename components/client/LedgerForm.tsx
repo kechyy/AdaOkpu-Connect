@@ -19,7 +19,7 @@ async function apiCreateLedger(data: Omit<LedgerFormValues, "id">) {
   return r.json();
 }
 
-async function apiUpdateMember(id: string, data: Partial<LedgerFormValues>) {
+async function apiUpdateLedger(id: string, data: Partial<LedgerFormValues>) {
   const r = await fetch(`/api/ledger/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -49,7 +49,7 @@ export default function LedgerForm({
   });
 
   const updateMut = useMutation({
-    mutationFn: (vals: LedgerFormValues) => apiUpdateMember(vals.id!, vals),
+    mutationFn: (vals: LedgerFormValues) => apiUpdateLedger(vals.id!, vals),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["ledger"] });
       router.push("/ledger");

@@ -1,35 +1,47 @@
 import { NextResponse } from "next/server";
-import { readDB, writeDB, SessionSchema } from "@/lib/db";
+import { ObjectId } from "mongodb";
+import { getDb } from "@/lib/mongo";
+import { SessionCreateSchema, toSessionAPI } from "@/lib/schemas";
 
-const PatchSchema = SessionSchema.partial();
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+// GET /api/sessions/:id
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const db = await readDB();
-  const row = db.sessions.find(x => x.id === id);
-  if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(row);
+  const db = await getDb();
+  const doc = await db
+    .collection("sessions")
+    .findOne({ _id: new ObjectId(id) });
+  if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json(toSessionAPI(doc as any));
 }
 
+// PATCH /api/sessions/:id
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const payload = await req.json();
-  const parsed = PatchSchema.safeParse(payload);
-  if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
-  const db = await readDB();
-  const i = db.sessions.findIndex(x => x.id === id);
-  if (i === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  db.sessions[i] = { ...db.sessions[i], ...parsed.data, id: db.sessions[i].id };
-  await writeDB(db);
-  return NextResponse.json(db.sessions[i]);
+  const body = await req.json();
+  // allow partial updates, but coerce/normalize known fields
+  const parsed = SessionCreateSchema.partial().safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+  }
+  const db = await getDb();
+  await db.collection("sessions").updateOne(
+    { _id: new ObjectId(id) },
+    { $set: parsed.data }
+  );
+  const doc = await db
+    .collection("sessions")
+    .findOne({ _id: new ObjectId(id) });
+  if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  return NextResponse.json(toSessionAPI(doc as any));
 }
 
-export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+// DELETE /api/sessions/:id
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const db = await readDB();
-  const before = db.sessions.length;
-  db.sessions = db.sessions.filter(x => x.id !== id);
-  if (db.sessions.length === before) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  await writeDB(db);
+  const db = await getDb();
+  await db.collection("sessions").deleteOne({ _id: new ObjectId(id) });
   return NextResponse.json({ ok: true });
 }

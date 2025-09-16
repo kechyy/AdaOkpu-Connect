@@ -17,7 +17,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   return NextResponse.json(toLedgerAPI(doc as any));
 }
 
-// PATCH /api/members/:id
+// PATCH /api/ledger/:id
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const body = await req.json();

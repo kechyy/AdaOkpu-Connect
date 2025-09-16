@@ -55,11 +55,11 @@ export default function LedgerTable() {
           <tbody>
             {rows.map(e => (
               <tr key={e.id} className="border-t">
-                <td className="td">{e.date}</td>
-                <td className="td">{e.contributor}</td>
-                <td className="td">{e.description}</td>
-                <td className="td">₦{e.amount.toLocaleString()}</td>
-                <td className="td">
+                <td className="td text-sm">{e.date}</td>
+                <td className="td text-sm">{e.contributor}</td>
+                <td className="td text-sm">{e.description}</td>
+                <td className="td text-sm">₦{e.amount.toLocaleString()}</td>
+                <td className="td text-sm">
                   <div className="flex justify-end gap-2">
                     <button className="p-2 rounded-lg hover:bg-gray-100" onClick={() => onEdit(e)} title="Edit">
                       <Pencil2Icon className="size-4" />

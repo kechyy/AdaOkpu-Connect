@@ -149,8 +149,43 @@ export const SessionCreateSchema = z.object({
   topic: z.string().min(1),
   speaker: z.string().min(1),
   notes: z.string().optional().default(""),
-  status: z.enum(["scheduled", "planned", "done"]).default("scheduled"),
+  status  : z.enum(["scheduled", "planned", "done"]).default("scheduled"),
 });
+
+export type SessionCreate = z.infer<typeof SessionCreateSchema>;
+
+// your MemberDoc type:
+export type SessionDoc = {
+  _id: ObjectId;          // keep _id here if you wish
+  date: Date;
+  topic: string;
+  speaker: string;
+  notes: string;
+  status?: string;
+  createdAt: Date
+};
+
+export type SessionAPI = {
+  id: string;
+  date: string;
+  topic: string;
+  speaker: string;
+  notes: string;
+  status?: string; 
+  createdAt: string;
+};
+
+export function toSessionAPI(s: WithId<SessionDoc>): SessionAPI {
+  return {
+    id: s._id.toString(),
+    date: s.date.toISOString().slice(0, 10),
+    topic: s.topic,
+    speaker: s.speaker,
+    notes: s.notes,
+    status: s.status,
+    createdAt: s.createdAt.toISOString(),
+  };
+}
 
 // helpers to map _id -> id + ISO dates if you need them
 export const toAPI = (doc: any) => ({

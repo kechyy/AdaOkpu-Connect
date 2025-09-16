@@ -1,69 +1,70 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-type Session = { id: string; date: string; topic: string; speaker: string; notes?: string };
+export type SessionFormValues = { id: string; date: string; topic: string; speaker: string; notes?: string; status?: string; };
 
-async function fetchRow(id: string): Promise<Session> {
-  const r = await fetch(`/api/sessions/${id}`, { cache: "no-store" });
-  if (!r.ok) throw new Error("Not found");
-  return r.json();
-}
-async function apiCreate(payload: Omit<Session, "id">): Promise<Session> {
-  const r = await fetch("/api/sessions", { method: "POST", body: JSON.stringify(payload) });
-  if (!r.ok) throw new Error("Failed");
-  return r.json();
-}
-async function apiUpdate(id: string, payload: Session): Promise<Session> {
-  const r = await fetch(`/api/sessions/${id}`, { method: "PATCH", body: JSON.stringify(payload) });
-  if (!r.ok) throw new Error("Failed");
+async function apiCreateSession(data: Omit<SessionFormValues, "id">) {
+  console.log('rrrr', data)
+  const r = await fetch("/api/sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!r.ok) throw new Error(await r.text());
   return r.json();
 }
 
-export default function SessionForm({ mode, id }: { mode: "create" | "edit"; id?: string }) {
+async function apiUpdateSession(id: string, data: Partial<SessionFormValues>) {
+  const r = await fetch(`/api/sessions/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+
+export default function SessionForm({  initial,
+  mode, // "create" | "edit"
+}: {
+  initial: SessionFormValues;
+  mode: "create" | "edit";
+}) {
   const router = useRouter();
   const qc = useQueryClient();
+  const form = useForm<SessionFormValues>({ defaultValues: initial });
 
-  const { data } = useQuery({ queryKey: ["session", id], queryFn: () => fetchRow(id!), enabled: mode === "edit" && !!id });
-  const form = useForm<Omit<Session, "id"> | Session>({
-    defaultValues: mode === "create" ?
-      { date: new Date().toISOString().slice(0,10), topic: "", speaker: "", notes: "" } :
-      undefined
-  });
-  useEffect(() => { if (mode === "edit" && data) form.reset(data); }, [mode, data, form]);
-
-  const create = useMutation({
-    mutationFn: (p: Omit<Session,"id">) => apiCreate(p),
-    onMutate: async (p) => {
-      await qc.cancelQueries({ queryKey: ["sessions"] });
-      const prev = qc.getQueryData<Session[]>(["sessions"]) || [];
-      const temp: Session = { id: "temp-"+Date.now(), ...p };
-      qc.setQueryData<Session[]>(["sessions"], [temp, ...prev]);
-      return { prev, temp };
+  const createMut = useMutation({
+    mutationFn: (vals: Omit<SessionFormValues, "id">) => apiCreateSession(vals),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["sessions"] });
+      router.push("/sessions");
     },
-    onError: (_e,_v,ctx)=>{ if(ctx?.prev) qc.setQueryData(["sessions"], ctx.prev); },
-    onSuccess: (saved,_v,ctx)=>{ qc.setQueryData<Session[]>(["sessions"], (curr=[])=>curr.map(x=>x.id===ctx?.temp.id?saved:x)); },
-    onSettled: ()=>router.push("/sessions")
   });
 
-  const update = useMutation({
-    mutationFn: (p: Session)=>apiUpdate(p.id, p),
-    onMutate: async (p)=>{
-      await qc.cancelQueries({ queryKey: ["sessions"] });
-      const prev = qc.getQueryData<Session[]>(["sessions"]) || [];
-      qc.setQueryData<Session[]>(["sessions"], prev.map(x=>x.id===p.id?{...x,...p}:x));
-      return { prev };
+  const updateMut = useMutation({
+    mutationFn: (vals: SessionFormValues) => apiUpdateSession(vals.id!, vals),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["sessions"] });
+      router.push("/sessions");
     },
-    onError: (_e,_v,ctx)=>{ if(ctx?.prev) qc.setQueryData(["sessions"], ctx.prev); },
-    onSettled: ()=>router.push("/sessions")
   });
 
-  const onSubmit = (v:any)=> mode==="create"?create.mutate(v as Omit<Session,"id">):update.mutate(v as Session);
-
-  if (mode==="edit" && !data) return <div className="p-4 text-sm text-gray-500">Loading…</div>;
+  const onSubmit = (vals: SessionFormValues) => {
+    if (mode === "create") {
+      const { id, ...rest } = vals;
+      console.log('createee', rest)
+      createMut.mutate(rest);
+    } else {
+      console.log('valls', mode)
+      updateMut.mutate(vals);
+    }
+  };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3 card">
