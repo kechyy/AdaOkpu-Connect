@@ -5,7 +5,7 @@
 import MemberForm from "@/components/client/MemberForm";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-type Member = { id: string; name: string; location?: string; interests?: string; joined: string };
+type Member = { id: string; name: string; surname: string; family_name: string; location?: string; whatsapp: string; interests?: string; joined: string };
 
 async function fetchMemberById(id: string): Promise<Member> {
   const r = await fetch(`/api/members/${id}`, { cache: "no-store" });

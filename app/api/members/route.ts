@@ -26,7 +26,10 @@ export async function POST(req: Request) {
   const now = new Date();
   const doc = {
     name: parsed.data.name,
+    surname: parsed.data.surname,
+    family_name: parsed.data.family_name,
     location: parsed.data.location,
+    whatsapp: parsed.data.whatsapp,
     interests: parsed.data.interests,
     joined: parsed.data.joined,
     createdAt: now,

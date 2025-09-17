@@ -3,7 +3,7 @@ import MemberForm, { MemberFormValues } from "@/components/client/MemberForm";
 
 export default function NewMemberPage() {
   const today = new Date().toISOString().slice(0, 10);
-  const initial: MemberFormValues = { name: "", location: "", interests: "", joined: today };
+  const initial: MemberFormValues = { name: "", surname: "", family_name: "", location: "", whatsapp: "", interests: "", joined: today };
 
   return (
     <div className="space-y-6">

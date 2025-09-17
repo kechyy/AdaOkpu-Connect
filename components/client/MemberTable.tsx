@@ -11,7 +11,10 @@ import { useEditStore } from "@/stores/edit";
 type Member = {
   id: string;
   name: string;
+  surname: string;
+  family_name: string;
   location?: string;
+  whatsapp: string;
   interests?: string;
   joined: string;
 };
@@ -64,7 +67,10 @@ export default function MemberTable() {
           <thead>
             <tr>
               <th className="th">Name</th>
+              <th className="th hidden md:table-cell">Surname</th>
+              <th className="th hidden md:table-cell">Family Name</th>
               <th className="th">Location</th>
+              <th className="th hidden md:table-cell">Whatsapp Number</th>
               <th className="th hidden md:table-cell">Interest</th>
               <th className="th">Date</th>
               <th className="th text-right w-28">Actions</th>
@@ -74,7 +80,10 @@ export default function MemberTable() {
             {members.map(m => (
               <tr key={m.id} className="border-t">
                 <td className="td text-sm">{m.name}</td>
+                <td className="td text-sm hidden md:table-cell">{m.surname}</td>
+                <td className="td text-sm hidden md:table-cell">{m.family_name}</td>
                 <td className="td text-sm">{m.location}</td>
+                <td className="td text-sm hidden md:table-cell">{m.whatsapp}</td>
                 <td className="td text-sm hidden md:table-cell">{m.interests}</td>
                 <td className="td text-sm">{m.joined}</td>
                 <td className="td text-sm">

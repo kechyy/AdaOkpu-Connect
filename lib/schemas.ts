@@ -9,7 +9,10 @@ const Interests = z.union([
 
 export const MemberCreateSchema = z.object({
   name: z.string().min(1),
+  surname: z.string().min(1),
+  family_name: z.string().min(1),
   location: z.string().default(""),
+  whatsapp: z.string(),
   interests: Interests.default(""),
   joined: z.union([z.string(), z.coerce.date()]).transform((v) =>
     typeof v === "string" ? new Date(v) : v
@@ -22,7 +25,10 @@ export type MemberCreate = z.infer<typeof MemberCreateSchema>;
 export type MemberDoc = {
   _id: ObjectId;          // keep _id here if you wish
   name: string;
+  surname: string;
+  family_name: string;
   location: string;
+  whatsapp: string;
   interests: string;
   joined: Date;
   createdAt: Date;
@@ -31,7 +37,10 @@ export type MemberDoc = {
 export type MemberAPI = {
   id: string;
   name: string;
+  surname: string;
+  family_name: string;
   location: string;
+  whatsapp: string;
   interests: string;
   joined: string;     // YYYY-MM-DD for the client
   createdAt: string;  // ISO
@@ -41,15 +50,15 @@ export function toMemberAPI(d: WithId<MemberDoc>): MemberAPI {
   return {
     id: d._id.toString(),
     name: d.name,
+    surname: d.surname,
+    family_name: d.family_name,
     location: d.location,
+    whatsapp: d.whatsapp,
     interests: d.interests,
     joined: d.joined.toISOString().slice(0, 10),
     createdAt: d.createdAt.toISOString(),
   };
 }
-
-
-
 
 
 // Decision model
