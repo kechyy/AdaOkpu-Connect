@@ -6,11 +6,11 @@ import clsx from "clsx";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/members", label: "Member List" },
-  { href: "/decisions", label: "Decisions Log" },
-  { href: "/ledger", label: "Support Ledger" },
-  { href: "/sessions", label: "Monthly Sessions" },
-  { href: "/welcome", label: "Welcome Text" },
+  { href: "/user/members", label: "Member List" },
+  { href: "/user/decisions", label: "Decisions Log" },
+  { href: "/user/ledger", label: "Support Ledger" },
+  { href: "/user/sessions", label: "Monthly Sessions" },
+  { href: "/user/welcome", label: "Welcome Text" },
 ];
 
 export default function SidebarNav() {
@@ -23,7 +23,7 @@ export default function SidebarNav() {
 
   return (
     <aside className="space-y-4">
-      <div className="text-xl font-bold">Ada-Okpu</div>
+      <div className="text-xl font-bold">Umu-Ada</div>
       <nav className="flex flex-col gap-1">
         {links.map((l) => (
           <Link

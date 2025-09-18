@@ -25,6 +25,7 @@ const INTEREST_OPTIONS = [
 ] as const;
 
 const LOCATION_OPTIONS = [
+  "Aba, Nigeria",
   "Enugu, Nigeria",
   "Lagos, Nigeria",
   "Abuja, Nigeria",
