@@ -15,7 +15,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <>
       <header className="border-b bg-white">
         <div className="container h-16 flex items-center justify-between">
-          <div className="font-bold">Umuada-Okpu-Bloodline</div>
+          <div className="font-bold">Umuada-Ogbonna-Bloodline</div>
           <div className="flex space-x-2 items-center ">
             <div className="note hidden md:block">Admin Tools</div>
             <LogoutButton/>
