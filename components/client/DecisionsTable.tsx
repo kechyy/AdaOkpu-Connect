@@ -45,7 +45,7 @@ export default function DecisionsTable() {
   }
 
   return (
-    <Section title="Decisions" actions={<Link href="/decisions/new" className="btn">Add Decision</Link>}>
+    <Section title="Decisions" actions={<Link href="/user/decisions/new" className="btn">Add Decision</Link>}>
       {isLoading ? <div className="p-4 text-sm text-gray-500">Loading…</div> : rows.length === 0 ? (
         <EmptyState>No decisions yet.</EmptyState>
       ) : (

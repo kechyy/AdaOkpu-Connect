@@ -47,7 +47,7 @@ export default function SessionsTable() {
   };
 
   return (
-    <Section title="Monthly Sessions" actions={<Link href="/sessions/new" className="btn">Add Session</Link>}>
+    <Section title="Monthly Sessions" actions={<Link href="/user/sessions/new" className="btn">Add Session</Link>}>
       {isLoading ? <div className="p-4 text-sm text-gray-500">Loading…</div> : sessions.length === 0 ? (
         <EmptyState>No sessions yet.</EmptyState>
       ) : (

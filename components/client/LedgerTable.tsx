@@ -46,7 +46,7 @@ export default function LedgerTable() {
 
 
   return (
-    <Section title="Support Ledger" actions={<Link href="/ledger/new" className="btn">Add Entry</Link>}>
+    <Section title="Support Ledger" actions={<Link href="/user/ledger/new" className="btn">Add Entry</Link>}>
       {isLoading ? <div className="p-4 text-sm text-gray-500">Loading…</div> : rows.length === 0 ? (
         <EmptyState>No entries yet.</EmptyState>
       ) : (
