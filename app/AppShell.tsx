@@ -18,7 +18,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <div className="font-bold">Umuada-Ogbonna-Bloodline</div>
           <div className="flex space-x-2 items-center ">
             <div className="note hidden md:block">Admin Tools</div>
-            <LogoutButton/>
+            {!isAuth && <LogoutButton/> }
           </div>
           
         </div>
