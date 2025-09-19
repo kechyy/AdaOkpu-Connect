@@ -7,11 +7,11 @@ import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/members", label: "Member List" },
-  { href: "/decisions", label: "Decisions Log" },
-  { href: "/ledger", label: "Support Ledger" },
-  { href: "/sessions", label: "Monthly Sessions" },
-  { href: "/welcome", label: "Welcome Text" },
+  { href: "/user/members", label: "Member List" },
+  { href: "/user/decisions", label: "Decisions Log" },
+  { href: "/user/ledger", label: "Support Ledger" },
+  { href: "/user/sessions", label: "Monthly Sessions" },
+  { href: "/user/welcome", label: "Welcome Text" },
 ];
 
 export default function MobileNav() {
